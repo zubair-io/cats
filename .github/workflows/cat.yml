@@ -1,0 +1,129 @@
+- name: Transform OpenAPI to Postman Collection
+  uses: stcalica/openapi-to-postman-collection@v1.0.0
+  with:
+    postman_api_key: ${{ secrets.POSTMAN_API_KEY }}
+    openapi_schema: openapi: 3.0.3
+                    info:
+                      title: Cat Breeds API
+                      description: Simple API to manage a collection of cat breeds.
+                      version: 1.0.0
+                    servers:
+                      - url: https://api.cats.com/v1
+                    paths:
+                      /breeds:
+                        get:
+                          summary: Get list of cat breeds
+                          operationId: getBreeds
+                          responses:
+                            '200':
+                              description: A list of cat breeds
+                              content:
+                                application/json:
+                                  schema:
+                                    type: array
+                                    items:
+                                      $ref: '#/components/schemas/CatBreed'
+                        post:
+                          summary: Add a new cat breed
+                          operationId: addBreed
+                          requestBody:
+                            required: true
+                            content:
+                              application/json:
+                                schema:
+                                  $ref: '#/components/schemas/CatBreedInput'
+                          responses:
+                            '201':
+                              description: Cat breed created
+                              content:
+                                application/json:
+                                  schema:
+                                    $ref: '#/components/schemas/CatBreed'
+                      /breeds/{id}:
+                        get:
+                          summary: Fetch a specific cat breed by ID
+                          operationId: getBreedById
+                          parameters:
+                            - name: id
+                              in: path
+                              required: true
+                              schema:
+                                type: string
+                          responses:
+                            '200':
+                              description: A single cat breed
+                              content:
+                                application/json:
+                                  schema:
+                                    $ref: '#/components/schemas/CatBreed'
+                            '404':
+                              description: Cat breed not found
+                        put:
+                          summary: Update a cat breed
+                          operationId: updateBreed
+                          parameters:
+                            - name: id
+                              in: path
+                              required: true
+                              schema:
+                                type: string
+                          requestBody:
+                            required: true
+                            content:
+                              application/json:
+                                schema:
+                                  $ref: '#/components/schemas/CatBreedInput'
+                          responses:
+                            '200':
+                              description: Cat breed updated
+                              content:
+                                application/json:
+                                  schema:
+                                    $ref: '#/components/schemas/CatBreed'
+                            '404':
+                              description: Cat breed not found
+                        delete:
+                          summary: Delete a cat breed
+                          operationId: deleteBreed
+                          parameters:
+                            - name: id
+                              in: path
+                              required: true
+                              schema:
+                                type: string
+                          responses:
+                            '204':
+                              description: Cat breed deleted
+                            '404':
+                              description: Cat breed not found
+
+                    components:
+                      schemas:
+                        CatBreed:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: "bengal-1234"
+                            name:
+                              type: string
+                              example: "Bengal"
+                            origin:
+                              type: string
+                              example: "Asia"
+                            description:
+                              type: string
+                              example: "The Bengal cat has a wild appearance with large spots and rosettes."
+
+                        CatBreedInput:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: "Siamese"
+                            origin:
+                              type: string
+                              example: "Thailand"
+                            description:
+                              type: string
+                              example: "The Siamese is one of the first distinctly recognized breeds of Asian cats."
