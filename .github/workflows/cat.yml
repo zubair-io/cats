@@ -22,7 +22,7 @@ jobs:
         uses: stcalica/postman-publish-action/actions/transform-openapi-from-file@v1
         id: schema
         with:
-          openapi_schema_path: 'catbreeds.yaml'  
+          openapi_schema_path: './catbreeds.yaml'  
           
       - name: Update Postman Collection
         uses: ./actions/update-collection
